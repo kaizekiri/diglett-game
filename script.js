@@ -1,5 +1,6 @@
 'use strict'
-var stage, preloadText, queue;
+const GRID_SIZE = 60;
+var stage, preloadText, queue, currentLevel=0;
 function preload(){
   stage = new createjs.Stage('canvas');
   preloadText = new createjs.Text("Loading: ", "20px", "#000");
@@ -10,8 +11,9 @@ function preload(){
   queue.on('progress', progress);
   queue.on('complete', complete);
   queue.loadManifest([
-    'img/spritesheet.png',
-    {id:'blockJson', src:'json/diglett.json'}
+    {id:'spriteSheet', src:'img/spritesheet.png'},
+    {id:'blockJson', src:'json/diglett.json'},
+    {id:'levelData', src:'json/levels.json'}
   ]);
 }
 
@@ -32,11 +34,64 @@ function tock(e) {
 }
 
 function setupLevel() {
-  console.log("start game");
+  var levelData = queue.getResult("levelData");
   var sheet = new createjs.SpriteSheet(queue.getResult('blockJson'));
-  console.log(sheet)
   var hole = new createjs.Sprite(sheet, 'hole');
+  var diglett = new createjs.Sprite(sheet, 'diglett');
+  var instance = new createjs.Sprite(sheet);
+  var holeLocation = levelData.levels[currentLevel].hole;
+  var diglettLocation = levelData.levels[currentLevel].diglett;
+
+  hole.x = holeLocation.x * GRID_SIZE;
+  hole.y = holeLocation.y * GRID_SIZE;
+
+  diglett.x = diglettLocation.x * GRID_SIZE;
+  diglett.y = diglettLocation.y * GRID_SIZE;
+
+
+
   stage.addChild(hole);
+  stage.addChild(diglett);
+
+
+
+
+
+
+
+
+/*
+var i = 10;
+
+while (i > 0) {
+
+switch (0.3<Math.random()) {
+  case true:
+    setTimeout(function() {
+      stage.removeChild(diglett);
+      stage.addChild(hole);
+      instance.gotoAndStop("hole");
+      console.log("show hole");
+      stage.addChild(instance);
+    }, 500);
+    i--;
+     break;
+
+  case false:
+  setTimeout(function() {
+    stage.removeChild(hole);
+    stage.addChild(diglett);
+    instance.gotoAndStop("diglett");
+    console.log("show diglett");
+    stage.addChild(instance);
+  }, 500);
+  i--;
+  break;
+}
+}
+*/
+
+
 }
 
 window.addEventListener('load', preload);
