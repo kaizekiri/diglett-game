@@ -1,8 +1,8 @@
 {
-  'images': ['img/spritesheet.png'],
-  'frames': {'width': 60, 'height': 60, 'regX': 0, 'regY': 0},
-  'animations': {
-    'hole': [0],
-    'diglett': [1]
+  "images": ["img/spritesheet.png"],
+  "frames": {"width": 60, "height": 60, "regX": 0, "regY": 0},
+  "animations": {
+    "hole": [0],
+    "diglett": [1]
   }
 }

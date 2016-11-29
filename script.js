@@ -21,6 +21,7 @@ function progress(e) {
 }
 
 function complete() {
+  stage.removeChild(preloadText);
   setupLevel();
   createjs.Ticker.setFPS(60);
   createjs.Ticker.on('tick', tock);
@@ -33,6 +34,7 @@ function tock(e) {
 function setupLevel() {
   console.log("start game");
   var sheet = new createjs.SpriteSheet(queue.getResult('blockJson'));
+  console.log(sheet)
   var hole = new createjs.Sprite(sheet, 'hole');
   stage.addChild(hole);
 }
