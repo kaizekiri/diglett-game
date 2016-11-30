@@ -37,6 +37,8 @@ function setupLevel() {
     var myScore = new createjs.Text("Score : 0","22px Helvetica","#000");
     myScore.x = 400;
     stage.addChild(myScore);
+    var myTimer = new createjs.Text("00 : 30","22px Helvetica","#000");
+    stage.addChild(myTimer);
   var levelData = queue.getResult("levelData");
   var sheet = new createjs.SpriteSheet(queue.getResult('blockJson'));
   var hole = new createjs.Sprite(sheet, 'hole');
@@ -52,6 +54,29 @@ function setupLevel() {
   diglett.y = diglettLocation.y * GRID_SIZE;
 
     stage.addChild(hole);
+
+
+    function startTimer(duration) {
+        var timer = duration, minutes, seconds;
+        setInterval(function () {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+
+
+            myTimer.text = minutes +  " : " + seconds;
+
+            if (--timer < 0) {
+                timer = 0;
+            }
+        }, 1000);
+    }
+
+    startTimer(30);
 
 
     var num = 0;
