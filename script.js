@@ -1,6 +1,6 @@
 'use strict'
 const GRID_SIZE = 60;
-var stage, preloadText, queue, currentLevel=0;
+var stage, preloadText, queue, currentLevel=0, points=0;
 function preload(){
   stage = new createjs.Stage('canvas');
   preloadText = new createjs.Text("Loading: ", "20px", "#000");
@@ -34,6 +34,9 @@ function tock(e) {
 }
 
 function setupLevel() {
+    var myScore = new createjs.Text("Score : 0","22px Helvetica","#000");
+    myScore.x = 400;
+    stage.addChild(myScore);
   var levelData = queue.getResult("levelData");
   var sheet = new createjs.SpriteSheet(queue.getResult('blockJson'));
   var hole = new createjs.Sprite(sheet, 'hole');
@@ -74,6 +77,9 @@ function setupLevel() {
   function getPoints() {
 
       console.log("Please dont kill me");
+      points++;
+      myScore.text = "Score : " + points;
+
 
   }
 
