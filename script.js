@@ -48,12 +48,34 @@ function setupLevel() {
   diglett.x = diglettLocation.x * GRID_SIZE;
   diglett.y = diglettLocation.y * GRID_SIZE;
 
+    stage.addChild(hole);
 
 
-  stage.addChild(hole);
-  stage.addChild(diglett);
+    var num = 0;
+    window.setInterval(function () {
+        // increase by num 1, reset to 0 at 4
+        num = (num + 1) % 4;
 
+        if(num<3){
+        /*instance.gotoAndStop("hole");
+        stage.addChild(instance);*/
+        stage.removeChild(diglett);
 
+        } else {
+            /*instance.gotoAndStop("diglett");
+            stage.addChild(instance);*/
+            stage.addChild(diglett);
+
+        }
+    }, 500);
+
+  diglett.addEventListener("click", getPoints);
+
+  function getPoints() {
+
+      console.log("Please dont kill me");
+
+  }
 
 
 
