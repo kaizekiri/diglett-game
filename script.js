@@ -82,7 +82,8 @@ function setupLevel() {
     clearInterval(clockTimer);
     clearInterval(appearTimer);
     allDigletts = [];
-    queue.getResult("newLevel").play();
+    var newLevel = queue.getResult("newLevel");
+    createjs.Sound.play(newLevel);
 
 
     //Adds score text
@@ -175,7 +176,7 @@ function setupLevel() {
 
     function getPoints() {
         var smash = queue.getResult("smash");
-        smash.play();
+        createjs.Sound.play(smash);
         points++;
         myScore.text = "Score : " + points;
 
