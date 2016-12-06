@@ -2,16 +2,15 @@
 //Global variabales
 const GRID_SIZE = 60;
 var stage, preloadText, queue, levelData, diglettImg, holeImg, allDigletts = [];
-var currentLevel = 0, points = 0;
+var currentLevel = 0,
+    points = 0;
 var clockTimer, appearTimer, myScore, myTimer;
 
 function preload() {
-    //Create a stage based on the canvas properties in index.html for displaying all the elements.
     stage = new createjs.Stage('canvas');
-    //Loading screen. Not really useful since program is loading fast.
     preloadText = new createjs.Text("Loading: ", "20px", "#000");
     stage.addChild(preloadText);
-    //Loads assets to the variable queue.
+
     queue = new createjs.LoadQueue(true);
     queue.installPlugin(createjs.Sound);
     queue.on('progress', progress);
@@ -19,55 +18,60 @@ function preload() {
     queue.loadManifest([{
         id: 'spriteSheet',
         src: 'img/spritesheet.png'
-    }, {
+    },
+    {
         id: 'startImage',
         src: 'img/start.png'
-    }, {
+    },{
         id: 'newLevel',
         src: 'img/newlevel.mp3'
-    }, {
+    },{
         id: 'smash',
         src: 'img/smash.mp3'
-    }, {
+    },
+     {
         id: 'blockJson',
         src: 'json/diglett.json'
     }, {
-        id: 'levelJson',
+        id: 'levelData',
         src: 'json/levels.json'
     }]);
 }
-//Updates progress text with percentage.
+
 function progress(e) {
     preloadText.text = Math.round(e.progress * 100) + '%';
     stage.update();
 }
-//When progress is done, then the function complete loads the start screen.
+
 function complete() {
     stage.removeChild(preloadText);
-    //Add logo
     var logo = new createjs.Bitmap("img/logo.png");
-    logo.scaleX = 0.9;
-    logo.scaleY = 0.9;
+    logo.scaleX=0.9;
+    logo.scaleY=0.9;
     logo.y = 30;
     stage.addChild(logo);
-    //Add playButton with a click listener that runs setupLevel.
+
     var playButton = new createjs.Bitmap("img/start.png");
-    playButton.addEventListener("click", setupLevel);
-    playButton.x = 220;
-    playButton.y = 240;
-    playButton.scaleX = 0.07;
-    playButton.scaleY = 0.07;
+    playButton.addEventListener("click",setupLevel);
+    playButton.x=220;
+    playButton.y=240;
+    playButton.scaleX=0.07;
+    playButton.scaleY=0.07;
     stage.addChild(playButton);
-    //Adds game description.
-    var instructions = new createjs.Text("Smash 3 digletts before the time runs out!", "22px Helvetica", "#000");
+
+
+
+
+    var instructions = new createjs.Text("Smash 3 digletts before the time runs out!","22px Helvetica", "#000");
     instructions.x = 70;
     instructions.y = 330;
     stage.addChild(instructions);
-    //Sets the frames per second to 60.
+
     createjs.Ticker.setFPS(60);
     createjs.Ticker.on('tick', tock);
+
 }
-//Updates the program according to FPS.
+
 function tock(e) {
     stage.update(e);
 }
@@ -78,9 +82,10 @@ function setupLevel() {
     clearInterval(clockTimer);
     clearInterval(appearTimer);
     allDigletts = [];
-    //Get newLevel sound and plays it when setupLevel loads.
+
     var newLevel = queue.getResult("newLevel");
     createjs.Sound.play("newLevel");
+
 
     //Adds score text
     myScore = new createjs.Text("Score : 0", "22px Helvetica", "#000");
@@ -92,43 +97,44 @@ function setupLevel() {
     myTimer.x = 10;
     myTimer.y = 10;
     stage.addChild(myTimer);
-    //If the game completes the last level we want it to load a final message to the player.
-    if (currentLevel === 3) {
-        var congrats = new createjs.Text("Digletts have feelings too.Did you think about that?", "22px Helvetica", "#000");
-        var congrats2 = new createjs.Text("No. You only think about yourself.", "22px Helvetica", "#000");
-        congrats.y = 10; //and more
-        congrats.x = 10;
-        congrats2.y = 210;
-        congrats2.x = 10;
-        stage.addChild(congrats);
-        stage.addChild(congrats2);
 
-        stage.removeChild(myScore);
-        stage.removeChild(myTimer);
+    if(currentLevel === 3) {
+      var congrats = new createjs.Text("Digletts have feelings too.Did you think about that?","22px Helvetica", "#000");
+      var congrats2 = new createjs.Text("No. You only think about yourself.","22px Helvetica", "#000");
+      congrats.y = 10;//and more
+      congrats.x = 10;
+      congrats2.y = 210;
+      congrats2.x = 10;
+      stage.addChild(congrats);
+      stage.addChild(congrats2);
+
+      stage.removeChild(myScore);
+      stage.removeChild(myTimer);
     }
 
     //Pulls images from json file!
     var sheet = new createjs.SpriteSheet(queue.getResult('blockJson'));
 
     //Pulls json data for populating the levels
-    levelData = queue.getResult("levelJson");
+    levelData = queue.getResult("levelData");
     var currentLevelData = levelData.levels[currentLevel].objects;
 
-    //Loops through the objects of each level in the Json file.
+
     for (var i = 0; i < currentLevelData.length; i++) {
-        //Creates two arrays to store the location for all holes and digletts.
+        //console.log(currentLevelData[i]);
         var holeLocation = [],
             diglettLocation = [];
         diglettLocation.push(currentLevelData[i].diglett);
         holeLocation.push(currentLevelData[i].hole);
-        //Loops through the holeLocation[] and adds the holeImg for each element.
+
         for (var u = 0; u < holeLocation.length; u++) {
             holeImg = new createjs.Sprite(sheet, 'hole');
             holeImg.x = holeLocation[u].x * GRID_SIZE;
             holeImg.y = holeLocation[u].y * GRID_SIZE;
             stage.addChild(holeImg);
         }
-        //This function makes diglett appear randomized-ish.
+
+
         function diglettAppear() {
             var num = 0;
             appearTimer = window.setInterval(function() {
@@ -146,8 +152,8 @@ function setupLevel() {
                 }
             }, 600);
         }
-        //Loops through the diglettLocation[] and adds the diglettImg for each element.
-        //Note: We pushed the location of some digletts outside of the canvas to hide them.
+
+
         for (var v = 0; v < diglettLocation.length; v++) {
             diglettImg = new createjs.Sprite(sheet, 'diglett');
             diglettImg.x = diglettLocation[v].x * GRID_SIZE;
@@ -163,24 +169,26 @@ function setupLevel() {
         }
 
     }
-    //This makes all digletts clickable and calls getPoints.
+
     for (var l = 0; l < allDigletts.length; l++) {
         allDigletts[l].addEventListener("click", getPoints);
     }
-    //Plays a sound and update the score.
+
+
     function getPoints() {
         var smash = queue.getResult("smash");
         createjs.Sound.play("smash");
         points++;
         myScore.text = "Score : " + points;
-        //setupLevel will be called if player reaches 3 points.
+
         if (points === 3) {
             points = 0;
             currentLevel++;
             setupLevel();
         }
+
     }
-    //Makes the clock count down.
+
     function startTimer(duration) {
         var timer = duration,
             minutes, seconds;
@@ -205,6 +213,8 @@ function setupLevel() {
     }
 
     startTimer(20);
+
+
 
 }
 
