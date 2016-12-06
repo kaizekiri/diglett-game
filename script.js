@@ -1,6 +1,6 @@
 'use strict'
 //Global variabales
-const GRID_SIZE = 10;
+const GRID_SIZE = 60;
 var stage, preloadText, queue, levelData, diglettImg, holeImg, allDigletts = [];
 var currentLevel = 0,
     points = 0;
@@ -101,7 +101,7 @@ function setupLevel() {
     if(currentLevel === 3) {
       var congrats = new createjs.Text("Digletts have feelings too.Did you think about that?","22px Helvetica", "#000");
       var congrats2 = new createjs.Text("No. You only think about yourself.","22px Helvetica", "#000");
-      congrats.y = 170;
+      congrats.y = 10;//and more
       congrats.x = 10;
       congrats2.y = 210;
       congrats2.x = 10;
