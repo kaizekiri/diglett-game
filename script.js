@@ -112,7 +112,7 @@ function setupLevel() {
       stage.removeChild(myTimer);
     }
 
-    //Pulls images from json file
+    //Pulls images from json file!
     var sheet = new createjs.SpriteSheet(queue.getResult('blockJson'));
 
     //Pulls json data for populating the levels
