@@ -1,6 +1,6 @@
 'use strict'
 //Global variabales
-const GRID_SIZE = 60;
+const GRID_SIZE = 70;
 var stage, preloadText, queue, levelData, diglettImg, holeImg, allDigletts = [];
 var currentLevel = 0,
     points = 0;
