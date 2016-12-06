@@ -1,7 +1,7 @@
 'use strict'
 //Global variabales
 const GRID_SIZE = 60;
-var stage, preloadText, queue, levelData, diglettImg, holeImg, allDigletts = [];
+var stage, preloadText, queue, levelData, diglettImg, holeImg, allDigletts = [], holeLocation=[], sheet;
 var currentLevel = 0, points = 0;
 var clockTimer, appearTimer, myScore, myTimer;
 
@@ -78,6 +78,7 @@ function setupLevel() {
     clearInterval(clockTimer);
     clearInterval(appearTimer);
     allDigletts = [];
+    holeLocation = [];
     //Get newLevel sound and plays it when setupLevel loads.
     var newLevel = queue.getResult("newLevel");
     createjs.Sound.play("newLevel");
@@ -88,7 +89,7 @@ function setupLevel() {
     myScore.y = 10;
     stage.addChild(myScore);
     //Adds timer text
-    myTimer = new createjs.Text("00 : 20", "22px Helvetica", "#000");
+    myTimer = new createjs.Text("00 : 30", "22px Helvetica", "#000");
     myTimer.x = 10;
     myTimer.y = 10;
     stage.addChild(myTimer);
@@ -108,7 +109,7 @@ function setupLevel() {
     }
 
     //Pulls images from json file!
-    var sheet = new createjs.SpriteSheet(queue.getResult('blockJson'));
+    sheet = new createjs.SpriteSheet(queue.getResult('blockJson'));
 
     //Pulls json data for populating the levels
     levelData = queue.getResult("levelJson");
@@ -117,9 +118,7 @@ function setupLevel() {
     //Loops through the objects of each level in the Json file.
     for (var i = 0; i < currentLevelData.length; i++) {
         //Creates two arrays to store the location for all holes and digletts.
-        var holeLocation = [],
-            diglettLocation = [];
-        diglettLocation.push(currentLevelData[i].diglett);
+
         holeLocation.push(currentLevelData[i].hole);
         //Loops through the holeLocation[] and adds the holeImg for each element.
         for (var u = 0; u < holeLocation.length; u++) {
@@ -128,6 +127,7 @@ function setupLevel() {
             holeImg.y = holeLocation[u].y * GRID_SIZE;
             stage.addChild(holeImg);
         }
+      }
         //This function makes diglett appear randomized-ish.
         function diglettAppear() {
             var num = 0;
@@ -136,37 +136,31 @@ function setupLevel() {
                 num = (num + 1) % 4;
 
                 if (num < 3) {
-                    for (var x = 0; x < allDigletts.length; x++) {
-                        stage.removeChild(allDigletts[x]);
-                    }
+                    stage.removeChild(diglettImg);
                 } else {
-                    for (var n = 0; n < allDigletts.length; n++) {
-                        stage.addChild(allDigletts[n]);
-                    }
+                    appear();
+
                 }
             }, 600);
         }
-        //Loops through the diglettLocation[] and adds the diglettImg for each element.
-        //Note: We pushed the location of some digletts outside of the canvas to hide them.
-        for (var v = 0; v < diglettLocation.length; v++) {
-            diglettImg = new createjs.Sprite(sheet, 'diglett');
-            diglettImg.x = diglettLocation[v].x * GRID_SIZE;
-            diglettImg.y = diglettLocation[v].y * GRID_SIZE;
-            allDigletts.push(diglettImg);
 
-            for (var m = 0; m < allDigletts.length; m++) {
-                console.log(allDigletts[m]);
-                stage.addChild(allDigletts[m]);
-                diglettAppear();
-            }
+        function appear(){
+          var randomSelection = Math.floor(Math.random() * holeLocation.length);
+          diglettImg = new createjs.Sprite(sheet, 'diglett');
+          diglettImg.x = holeLocation[randomSelection].x * GRID_SIZE;
+          diglettImg.y = holeLocation[randomSelection].y * GRID_SIZE;
+          stage.addChild(diglettImg);
+          //This makes all digletts clickable and calls getPoints.
+          diglettImg.addEventListener("click", getPoints);
 
+          console.log(randomSelection);
         }
 
-    }
-    //This makes all digletts clickable and calls getPoints.
-    for (var l = 0; l < allDigletts.length; l++) {
-        allDigletts[l].addEventListener("click", getPoints);
-    }
+        diglettAppear();
+
+
+
+
     //Plays a sound and update the score.
     function getPoints() {
         var smash = queue.getResult("smash");
@@ -204,7 +198,7 @@ function setupLevel() {
         }, 1000);
     }
 
-    startTimer(20);
+    startTimer(30);
 
 }
 
