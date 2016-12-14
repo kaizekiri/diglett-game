@@ -5,9 +5,16 @@
     <meta charset="utf-8">
     <title>Whack-A-Diglett</title>
 </head>
+<style>
+@font-face {
+  font-family: pixelFont;
+  src: url(img/SFPixelate.ttf);
+}
 
-<body style="background-color: #2e3440">
-    <canvas id="canvas" width="540" height="420" style="background-image: url('img/background.png');"></canvas>
+</style>
+
+<body style="background-color: #2e3440;">
+    <canvas id="canvas" width="540" height="420" style="background-image: url(img/background.png); cursor: url(img/hammer.png) 10 20, auto;"> </canvas>
     <script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
     <script type="text/javascript" src="script.js"></script>
 </body>

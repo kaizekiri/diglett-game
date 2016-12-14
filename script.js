@@ -2,7 +2,7 @@
 //Global variabales
 const GRID_SIZE = 60;
 var stage, preloadText, queue, levelData, diglettImg, holeImg, allDigletts = [], holeLocation=[], sheet;
-var currentLevel = 0, points = 0;
+var currentLevel = 3, points = 0;
 var clockTimer, appearTimer, myScore, myTimer;
 
 function preload() {
@@ -55,12 +55,12 @@ function complete() {
     playButton.addEventListener("click", setupLevel);
     playButton.x = 220;
     playButton.y = 240;
-    playButton.scaleX = 0.07;
-    playButton.scaleY = 0.07;
+    playButton.scaleX = 0.4;
+    playButton.scaleY = 0.4;
     stage.addChild(playButton);
     //Adds game description.
-    var instructions = new createjs.Text("Smash 3 digletts before the time runs out!", "22px Helvetica", "#000");
-    instructions.x = 70;
+    var instructions = new createjs.Text("Smash 3 digletts in 30 seconds!", "24px pixelFont", "#2e1705");
+    instructions.x = 40;
     instructions.y = 330;
     stage.addChild(instructions);
     //Sets the frames per second to 60.
@@ -84,19 +84,21 @@ function setupLevel() {
     createjs.Sound.play("newLevel");
 
     //Adds score text
-    myScore = new createjs.Text("Score : 0", "22px Helvetica", "#000");
-    myScore.x = 435;
+    myScore = new createjs.Text("Score : 0", "22px pixelFont", "#2e1705");
+    myScore.x = 400;
     myScore.y = 10;
     stage.addChild(myScore);
     //Adds timer text
-    myTimer = new createjs.Text("00 : 30", "22px Helvetica", "#000");
+    myTimer = new createjs.Text("00 : 30", "22px pixelFont", "#2e1705");
     myTimer.x = 10;
     myTimer.y = 10;
     stage.addChild(myTimer);
+
+
     //If the game completes the last level we want it to load a final message to the player.
-    if (currentLevel === 3) {
-        var congrats = new createjs.Text("Digletts have feelings too.Did you think about that?", "22px Helvetica", "#000");
-        var congrats2 = new createjs.Text("No. You only think about yourself.", "22px Helvetica", "#000");
+    if (currentLevel === 9) {
+        var congrats = new createjs.Text("Digletts have feelings too.Did you think about that?", "22px pixelFont", "#000");
+        var congrats2 = new createjs.Text("No. You only think about yourself.", "22px pixelFont", "#000");
         congrats.y = 10; //and more
         congrats.x = 10;
         congrats2.y = 210;
@@ -114,7 +116,6 @@ function setupLevel() {
     //Pulls json data for populating the levels
     levelData = queue.getResult("levelJson");
     var currentLevelData = levelData.levels[currentLevel].objects;
-
     //Loops through the objects of each level in the Json file.
     for (var i = 0; i < currentLevelData.length; i++) {
         //Creates two arrays to store the location for all holes and digletts.
@@ -141,7 +142,7 @@ function setupLevel() {
                     appear();
 
                 }
-            }, 600);
+            }, 900);
         }
 
         function appear(){
@@ -153,7 +154,7 @@ function setupLevel() {
           //This makes all digletts clickable and calls getPoints.
           diglettImg.addEventListener("click", getPoints);
 
-          console.log(randomSelection);
+          //console.log(randomSelection);
         }
 
         diglettAppear();
@@ -190,10 +191,7 @@ function setupLevel() {
 
             if (--timer < 0) {
                 timer = 0;
-                console.log("time is out");
-                currentLevel = 0;
-                points = 0;
-                setupLevel();
+                gameOver();
             }
         }, 1000);
     }
@@ -201,5 +199,41 @@ function setupLevel() {
     startTimer(30);
 
 }
+
+function gameOver() {
+  //Cleans the canvas for the next level
+  stage.removeAllChildren();
+  clearInterval(clockTimer);
+  clearInterval(appearTimer);
+  allDigletts = [];
+  holeLocation = [];
+  currentLevel = 0;
+  points = 0;
+
+  //Add retry with a click listener that runs setupLevel.
+  var retryButton = new createjs.Bitmap("img/start.png");
+  retryButton.addEventListener("click", setupLevel);
+  retryButton.x = 220;
+  retryButton.y = 300;
+  retryButton.scaleX = 0.4;
+  retryButton.scaleY = 0.4;
+  stage.addChild(retryButton);
+
+  //Adds gameover text.
+  var gameovertext = new createjs.Text("Game over!", "65px pixelFont", "#2e1705");
+  gameovertext.x = 60;
+  gameovertext.y = 100;
+  stage.addChild(gameovertext);
+
+  //Adds gameover text.
+  var gameoverinfo = new createjs.Text("Oh noes! Your time ran out before you hit three Digletts. Hit START to try again.", "25px pixelFont", "#582a07");
+  gameoverinfo.x = 280;
+  gameoverinfo.y = 190;
+  gameoverinfo.lineWidth = 480;
+  gameoverinfo.textAlign = "center";
+  stage.addChild(gameoverinfo);
+
+}
+
 
 window.addEventListener('load', preload);
