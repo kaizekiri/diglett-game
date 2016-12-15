@@ -2,7 +2,7 @@
 //Global variabales
 const GRID_SIZE = 60;
 var stage, preloadText, queue, levelData, diglettImg, holeImg, allDigletts = [], holeLocation=[], sheet;
-var currentLevel = 0, points = 0;
+var currentLevel = 9, points = 0;
 var clockTimer, appearTimer, myScore, myTimer;
 
 function preload() {
@@ -97,12 +97,24 @@ function setupLevel() {
 
     //If the game completes the last level we want it to load a final message to the player.
     if (currentLevel === 9) {
+      //Add image of crying Diglett.
+      var cryingDiglett = new createjs.Bitmap("img/cryingDiglett.png");
+      cryingDiglett.x = 170;
+      cryingDiglett.y = 0;
+      cryingDiglett.scaleX = 0.7;
+      cryingDiglett.scaleY = 0.7;
+      stage.addChild(cryingDiglett);
+
         var congrats = new createjs.Text("Digletts have feelings too.Did you think about that?", "22px pixelFont", "#000");
         var congrats2 = new createjs.Text("No. You only think about yourself.", "22px pixelFont", "#000");
-        congrats.y = 10; //and more
-        congrats.x = 10;
-        congrats2.y = 210;
-        congrats2.x = 10;
+        congrats.y = 240; //and more
+        congrats.x = 270;
+        congrats2.y = 320;
+        congrats2.x = 270;
+        congrats.lineWidth = 480;
+        congrats.textAlign = "center";
+        congrats2.lineWidth = 480;
+        congrats2.textAlign = "center";
         stage.addChild(congrats);
         stage.addChild(congrats2);
 
