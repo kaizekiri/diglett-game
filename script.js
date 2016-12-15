@@ -2,7 +2,7 @@
 //Global variabales
 const GRID_SIZE = 60;
 var stage, preloadText, queue, levelData, diglettImg, holeImg, allDigletts = [], holeLocation=[], sheet;
-var currentLevel = 9, points = 0;
+var currentLevel = 0, points = 0;
 var clockTimer, appearTimer, myScore, myTimer;
 
 function preload() {
